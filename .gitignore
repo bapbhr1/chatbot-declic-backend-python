@@ -1,0 +1,15 @@
+# Fichiers volumineux et sensibles à ignorer
+.env
+*.sqlite3
+*.db
+*.pyc
+__pycache__/
+data/clients/*/chroma_db/
+data/clients/*/content.json
+data/clients/*/manual_content.json
+# Fichiers système
+.DS_Store
+# Dossiers de cache
+.cache/
+# Fichiers de logs
+*.log

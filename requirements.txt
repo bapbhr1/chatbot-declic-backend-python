@@ -1,0 +1,9 @@
+requests
+python-dotenv
+beautifulsoup4
+openai
+chromadb
+tqdm
+pydantic-settings
+flask
+flask_cors
