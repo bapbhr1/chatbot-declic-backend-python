@@ -84,7 +84,7 @@ def build_chroma_collection(client_id):
         for chunk in chunks:
             all_chunks.append(chunk)
             metadatas.append({
-                "title": item["title"],
+                "title": item.get("title", ""),
                 "url": item.get("url", "manuel"),
                 "type": item.get("type", "manuel")
             })

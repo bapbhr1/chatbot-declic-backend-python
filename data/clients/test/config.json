@@ -1,0 +1,9 @@
+{
+    "label": "DG Finances",
+    "system_prompt": "Assiste et réponds aux questions des clients comme si tu faisais partie de l\\'équipe DG Finance. Utilise les informations fournies.",
+    "welcome_message": "Bonjour !",
+    "site_url": "https:\/\/www.dgfinances.com\/",
+    "top_k_results": 4,
+    "temperature": 0.39,
+    "max_tokens": 302
+}
