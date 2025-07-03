@@ -18,7 +18,8 @@ EMBEDDING_MODEL = "text-embedding-3-large"
 CHUNK_MAX_LENGTH = 500
 
 def get_client_paths(client_id):
-    base_path = Path("data/clients") / client_id
+    # Toujours basé sur le dossier du script, pas le dossier courant
+    base_path = Path(__file__).resolve().parent.parent / "data/clients" / client_id
     return {
         "content_file": base_path / "content.json",
         "manual_file": base_path / "manual_content.json",
@@ -84,7 +85,7 @@ def build_chroma_collection(client_id):
         for chunk in chunks:
             all_chunks.append(chunk)
             metadatas.append({
-                "title": item.get("title", ""),
+                "title": item["title"],
                 "url": item.get("url", "manuel"),
                 "type": item.get("type", "manuel")
             })

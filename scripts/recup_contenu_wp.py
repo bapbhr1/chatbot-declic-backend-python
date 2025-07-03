@@ -6,7 +6,8 @@ from bs4 import BeautifulSoup
 from pathlib import Path
 
 def load_client_config(client_id):
-    config_path = Path("data/clients") / client_id / "config.json"
+    # Toujours basé sur le dossier du script, pas le dossier courant
+    config_path = Path(__file__).resolve().parent.parent / "data/clients" / client_id / "config.json"
     if not config_path.is_file():
         raise FileNotFoundError(f"Config client introuvable : {config_path}")
     with open(config_path, "r", encoding="utf-8") as f:
@@ -74,7 +75,7 @@ def fetch_and_clean_content(config):
     return all_data
 
 def save_to_file(client_id, data):
-    output_file = Path("data/clients") / client_id / "content.json"
+    output_file = Path(__file__).resolve().parent.parent / "data/clients" / client_id / "content.json"
     os.makedirs(output_file.parent, exist_ok=True)
     with open(output_file, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
