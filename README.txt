@@ -39,7 +39,7 @@ Ce projet permet de créer un chatbot intelligent pour un site WordPress. Le cha
 ## Configuration
 
 Chaque client possède son propre dossier dans `data/clients/<client_id>/` contenant :
-- `config.json` : paramètres du client (site_url, prompt, exclusions, etc.)
+- `config.json` : paramètres du client (site_url, prompt, etc.)
 - `content.json` : contenu extrait du site WordPress
 - `manual_content.json` : contenu manuel additionnel (optionnel)
 - `chroma_db/` : base ChromaDB locale pour les embeddings
