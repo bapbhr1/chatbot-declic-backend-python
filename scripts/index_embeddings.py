@@ -73,7 +73,11 @@ def build_chroma_collection(client_id):
     if paths["chroma_dir"].exists():
         shutil.rmtree(paths["chroma_dir"])
 
-    client = chromadb.PersistentClient(path=str(paths["chroma_dir"]))
+    # Compatibilité chromadb : PersistentClient si dispo, sinon Client (sans path)
+    if hasattr(chromadb, "PersistentClient"):
+        client = chromadb.PersistentClient(path=str(paths["chroma_dir"]))
+    else:
+        client = chromadb.Client()  # Pas de persistance si pas de PersistentClient
     collection = client.create_collection(COLLECTION_NAME)
 
     contents = load_content(paths["content_file"], paths["manual_file"])
@@ -85,7 +89,7 @@ def build_chroma_collection(client_id):
         for chunk in chunks:
             all_chunks.append(chunk)
             metadatas.append({
-                "title": item["title"],
+                "title": item.get("title", "manuel"),
                 "url": item.get("url", "manuel"),
                 "type": item.get("type", "manuel")
             })
