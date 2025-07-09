@@ -36,6 +36,7 @@ Ce projet permet de créer un chatbot intelligent pour un site WordPress. Le cha
   `openai`, `chromadb`, `python-dotenv`, `tqdm`, `flask`, `flask-cors`, `beautifulsoup4`, `requests`  
   (installer via `pip install -r requirements.txt`)
 
+
 ## Configuration
 
 Chaque client possède son propre dossier dans `data/clients/<client_id>/` contenant :

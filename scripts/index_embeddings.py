@@ -44,7 +44,32 @@ def load_content(content_file, manual_file):
     if not contents:
         raise FileNotFoundError("Aucun contenu à indexer trouvé.")
 
-    return contents
+    # --- FILTRAGE EFFICACE ---
+    def is_valid(item):
+        
+        # Exclure certains types
+        if item.get("type") in {"draft", "private"}:
+            return False
+        # Exclure certaines urls/pages
+        url = item.get("url", "")
+        if any(excl in url for excl in ["mentions-legales", "cgu", "politique-confidentialite"]):
+            return False
+        return True
+
+    # Supprimer les doublons par URL
+    seen_urls = set()
+    filtered = []
+    for item in contents:
+        url = item.get("url")
+        if url and url in seen_urls:
+            continue
+        if is_valid(item):
+            filtered.append(item)
+            if url:
+                seen_urls.add(url)
+    if not filtered:
+        raise FileNotFoundError("Aucun contenu à indexer après filtrage.")
+    return filtered
 
 def chunk_text(text, max_length):
     paragraphs = text.split("\n")
@@ -68,14 +93,22 @@ def get_embedding(text):
 
 def build_chroma_collection(client_id):
     paths = get_client_paths(client_id)
+    chroma_dir = paths["chroma_dir"]
+    chroma_dir_tmp = chroma_dir.parent / "chroma_db_new"
+    should_index_file = chroma_dir.parent / "should_index.txt"
 
-    # Supprime l'ancien dossier chroma si existe
-    if paths["chroma_dir"].exists():
-        shutil.rmtree(paths["chroma_dir"])
+    # Vérification du fichier témoin should_index.txt
+    if not should_index_file.exists():
+        print("Aucun changement détecté, indexation ignorée.")
+        return
 
-    # Compatibilité chromadb : PersistentClient si dispo, sinon Client (sans path)
+    # Nettoyage du dossier temporaire s'il existe déjà
+    if chroma_dir_tmp.exists():
+        shutil.rmtree(chroma_dir_tmp)
+
+    # Création de la nouvelle base dans le dossier temporaire
     if hasattr(chromadb, "PersistentClient"):
-        client = chromadb.PersistentClient(path=str(paths["chroma_dir"]))
+        client = chromadb.PersistentClient(path=str(chroma_dir_tmp))
     else:
         client = chromadb.Client()  # Pas de persistance si pas de PersistentClient
     collection = client.create_collection(COLLECTION_NAME)
@@ -110,7 +143,15 @@ def build_chroma_collection(client_id):
         embeddings=embeddings
     )
 
-    print(f"Embeddings indexés dans {paths['chroma_dir']}")
+    # Swap atomique : on ne remplace l'ancienne base que si la nouvelle est prête
+    if chroma_dir.exists():
+        shutil.rmtree(chroma_dir)
+    chroma_dir_tmp.rename(chroma_dir)
+    print(f"Embeddings indexés dans {chroma_dir}")
+
+    # Suppression du fichier should_index.txt après indexation
+    if should_index_file.exists():
+        os.remove(should_index_file)
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:

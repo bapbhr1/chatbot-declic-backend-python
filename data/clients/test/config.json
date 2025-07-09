@@ -1,0 +1,8 @@
+{
+    "system_prompt": "Oriente les clients en fonction des informations que tu as.",
+    "welcome_message": "",
+    "site_url": "http:\/\/localhost:8888\/chatbot-site\/",
+    "top_k_results": 5,
+    "temperature": 0.4,
+    "max_tokens": 300
+}
