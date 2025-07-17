@@ -60,7 +60,7 @@ def log_question(client_id, question, answer, user_ip=None):
     log_entry = {
         "timestamp": now.isoformat(),
         "question": question,
-        "answer": answer[:250] + "..." if len(answer) > 250 else answer,  # Tronquer la réponse
+        "answer": answer[:500] + "..." if len(answer) > 500 else answer,  # Tronquer la réponse
         "user_ip": user_ip,
         "client_id": client_id
     }
@@ -274,6 +274,7 @@ def get_questions_log(client_id):
             "total": 0, 
             "year": year, 
             "month": month,
+            
             "file_path": str(log_file.relative_to(client_dir))
         })
     
@@ -286,7 +287,7 @@ def get_questions_log(client_id):
         offset = request.args.get('offset', 0, type=int)
         
         # Inverser l'ordre pour avoir les plus récentes en premier
-        logs = logs[::-1]
+        
         paginated_logs = logs[offset:offset+limit]
         
         return jsonify({
@@ -488,11 +489,11 @@ def get_questions_log_wp():
             logs = json.load(f)
         
         # Pagination
-        limit = request.args.get('limit', 50, type=int)
+        limit = request.args.get('limit', 1000, type=int)
         offset = request.args.get('offset', 0, type=int)
         
         # Inverser l'ordre pour avoir les plus récentes en premier
-        logs = logs[::-1]
+        
         paginated_logs = logs[offset:offset+limit]
         
         return jsonify({

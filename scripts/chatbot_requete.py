@@ -44,7 +44,7 @@ def search_chroma(query, chroma_dir, collection_name, embedding_model, top_k):
 
     results = collection.query(
         query_embeddings=[query_embedding],
-        n_results=top_k * 3,  # On élargit pour pouvoir trier ensuite
+        n_results=top_k ,  
         include=["documents", "metadatas"]
     )
     # Associer chaque chunk à sa metadata
@@ -59,9 +59,7 @@ def search_chroma(query, chroma_dir, collection_name, embedding_model, top_k):
             "title": meta.get("title", ""),
             "url": meta.get("url", "")
         })
-    # Tri décroissant par date (format ISO)
-    passages.sort(key=lambda x: x["modified"], reverse=True)
-    # On ne garde que les top_k plus récents
+    
     return passages[:top_k]
 
 def build_prompt(user_query, contexts, system_prompt):
