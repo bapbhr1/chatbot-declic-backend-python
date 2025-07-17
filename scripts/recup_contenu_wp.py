@@ -6,9 +6,14 @@ from bs4 import BeautifulSoup
 from pathlib import Path
 import re
 
+# === IMPORTANT ===
+# Ce script doit être exécuté sur le serveur, jamais en local.
+# Le chemin des clients est défini par la variable d'environnement CHATBOT_CLIENTS_PATH
+# ou par défaut '/root/chatbot-wp-declic/data/clients/'
+CLIENTS_PATH = Path(os.environ.get("CHATBOT_CLIENTS_PATH", "/root/chatbot-wp-declic/data/clients/"))
+
 def load_client_config(client_id):
-    # Toujours basé sur le dossier du script, pas le dossier courant
-    config_path = Path(__file__).resolve().parent.parent / "data/clients" / client_id / "config.json"
+    config_path = CLIENTS_PATH / client_id / "config.json"
     if not config_path.is_file():
         raise FileNotFoundError(f"Config client introuvable : {config_path}")
     with open(config_path, "r", encoding="utf-8") as f:
@@ -61,31 +66,38 @@ def fetch_and_clean_content(config):
     base_api_url = site_url.rstrip("/") + "/wp-json/wp/v2"
 
     for content_type in content_types:
-        url = f"{base_api_url}/{content_type}?per_page={per_page}"
-        print(f"🔍 Récupération de : {url}")
-        response = requests.get(url)
-        response.raise_for_status()
-
-        items = response.json()
-        for item in items:
-            if not is_valid_entry(item, content_type, config):
-                continue
-
-            cleaned = {
-                "id": item.get("id"),
-                "type": content_type[:-1],  # "pages" -> "page"
-                "title": item["title"]["rendered"].strip(),
-                "slug": item["slug"],
-                "url": item["link"],
-                "content": clean_html(item["content"]["rendered"]),
-                "modified": item.get("modified")  # Ajout de la date de modification
-            }
-            all_data.append(cleaned)
-
+        page = 1
+        while True:
+            url = f"{base_api_url}/{content_type}?per_page={per_page}&page={page}"
+            print(f"🔍 Récupération de : {url}")
+            response = requests.get(url)
+            if response.status_code == 400 and 'rest_post_invalid_page_number' in response.text:
+                # Fin de la pagination
+                break
+            response.raise_for_status()
+            items = response.json()
+            if not items:
+                break
+            for item in items:
+                if not is_valid_entry(item, content_type, config):
+                    continue
+                cleaned = {
+                    "id": item.get("id"),
+                    "type": content_type[:-1],  # "pages" -> "page"
+                    "title": item["title"]["rendered"].strip(),
+                    "slug": item["slug"],
+                    "url": item["link"],
+                    "content": clean_html(item["content"]["rendered"]),
+                    "modified": item.get("modified")  # Ajout de la date de modification
+                }
+                all_data.append(cleaned)
+            if len(items) < per_page:
+                break
+            page += 1
     return all_data
 
 def save_to_file(client_id, data):
-    output_file = Path(__file__).resolve().parent.parent / "data/clients" / client_id / "content.json"
+    output_file = CLIENTS_PATH / client_id / "content.json"
     os.makedirs(output_file.parent, exist_ok=True)
     with open(output_file, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
@@ -125,7 +137,7 @@ def compare_modification_dates(old_path, new_path):
         for c in changed:
             print(f"- {c['title']} ({c['url']}) : {c['old_date']} -> {c['new_date']}")
     else:
-        print("\nAucun changement détecté. Pas de mise à jour nécessaire.")
+        print("\nAucun changement détecté sur le site web. Pas de mise à jour nécessaire.")
 
 def summarize_differences_by_date(old_path, new_path, should_index_path=None):
     def load_json(path):
@@ -177,9 +189,9 @@ if __name__ == "__main__":
         sys.exit(1)
     client_id = sys.argv[1]
     config = load_client_config(client_id)
-    output_file = Path(__file__).resolve().parent.parent / "data/clients" / client_id / "content.json"
+    output_file = CLIENTS_PATH / client_id / "content.json"
     old_file = str(output_file) + ".old"
-    should_index_file = Path(__file__).resolve().parent.parent / "data/clients" / client_id / "should_index.txt"
+    should_index_file = CLIENTS_PATH / client_id / "should_index.txt"
     # Sauvegarde l'ancien contenu si existe
     if output_file.exists():
         os.rename(output_file, old_file)

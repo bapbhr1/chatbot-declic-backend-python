@@ -20,8 +20,14 @@ AI_CONFIG = {
     "collection_name": "wordpress_content"
 }
 
+# === IMPORTANT ===
+# Ce script doit être exécuté sur le serveur, jamais en local.
+# Le chemin des clients est défini par la variable d'environnement CHATBOT_CLIENTS_PATH
+# ou par défaut '/root/chatbot-wp-declic/data/clients/'
+CLIENTS_PATH = Path(os.environ.get("CHATBOT_CLIENTS_PATH", "/root/chatbot-wp-declic/data/clients/"))
+
 def load_client_config(client_id):
-    config_path = Path(f"data/clients/{client_id}/config.json")
+    config_path = CLIENTS_PATH / client_id / "config.json"
     if config_path.is_file():
         with open(config_path, "r", encoding="utf-8") as f:
             return json.load(f)
@@ -38,15 +44,31 @@ def search_chroma(query, chroma_dir, collection_name, embedding_model, top_k):
 
     results = collection.query(
         query_embeddings=[query_embedding],
-        n_results=top_k,
-        include=["documents"]
+        n_results=top_k * 3,  # On élargit pour pouvoir trier ensuite
+        include=["documents", "metadatas"]
     )
-    return results['documents'][0] if results['documents'] else []
+    # Associer chaque chunk à sa metadata
+    docs = results["documents"][0] if results["documents"] else []
+    metas = results["metadatas"][0] if results["metadatas"] else []
+    # Fusionner et trier par date de modification (décroissante)
+    passages = []
+    for doc, meta in zip(docs, metas):
+        passages.append({
+            "content": doc,
+            "modified": meta.get("modified", "1970-01-01"),
+            "title": meta.get("title", ""),
+            "url": meta.get("url", "")
+        })
+    # Tri décroissant par date (format ISO)
+    passages.sort(key=lambda x: x["modified"], reverse=True)
+    # On ne garde que les top_k plus récents
+    return passages[:top_k]
 
 def build_prompt(user_query, contexts, system_prompt):
     prompt = "Voici des extraits du site :\n"
     for i, context in enumerate(contexts):
-        prompt += f"[Passage {i+1}]: {context}\n"
+        date_str = f" (modifié le {context['modified']})" if context.get('modified') else ""
+        prompt += f"[Passage {i+1}{date_str}]: {context['content']}\n"
     prompt += f"\nQuestion : {user_query}\n"
     prompt += (
         "Réponds de manière professionnelle, amicale et concise. "
@@ -76,7 +98,7 @@ def chatbot_response(user_question, client_id="default"):
     max_tokens = client_conf.get("max_tokens", AI_CONFIG["max_tokens"])
     openai_model = client_conf.get("openai_model", AI_CONFIG["openai_model"])
     embedding_model = client_conf.get("embedding_model", AI_CONFIG["embedding_model"])
-    chroma_dir = client_conf.get("chroma_dir", f"data/clients/{client_id}/chroma_db")
+    chroma_dir = client_conf.get("chroma_dir", str(CLIENTS_PATH / client_id / "chroma_db"))
     collection_name = client_conf.get("collection_name", AI_CONFIG["collection_name"])
 
     contexts = search_chroma(user_question, chroma_dir, collection_name, embedding_model, top_k)

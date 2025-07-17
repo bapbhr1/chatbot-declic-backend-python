@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  chatbot-backend:
+    image: chatbot-backend
+    container_name: chatbot-backend
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./data:/app/data
+      - ./scripts:/app/scripts
+      - ./logs:/app/logs
+    environment:
+      - CHATBOT_CLIENTS_PATH=/app/data/clients
+      - TZ=Europe/Paris
+    networks:
+      - chatbot-network
+
+networks:
+  chatbot-network:
+    driver: bridge

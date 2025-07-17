@@ -12,14 +12,19 @@ load_dotenv(dotenv_path=Path(__file__).resolve().parent / ".env", override=True)
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
+# === IMPORTANT ===
+# Ce script doit être exécuté sur le serveur, jamais en local.
+# Le chemin des clients est défini par la variable d'environnement CHATBOT_CLIENTS_PATH
+# ou par défaut '/root/chatbot-wp-declic/data/clients/'
+CLIENTS_PATH = Path(os.environ.get("CHATBOT_CLIENTS_PATH", "/root/chatbot-wp-declic/data/clients/"))
+
 # Constantes fixes
 COLLECTION_NAME = "wordpress_content"
 EMBEDDING_MODEL = "text-embedding-3-large"
 CHUNK_MAX_LENGTH = 500
 
 def get_client_paths(client_id):
-    # Toujours basé sur le dossier du script, pas le dossier courant
-    base_path = Path(__file__).resolve().parent.parent / "data/clients" / client_id
+    base_path = CLIENTS_PATH / client_id
     return {
         "content_file": base_path / "content.json",
         "manual_file": base_path / "manual_content.json",
@@ -124,7 +129,8 @@ def build_chroma_collection(client_id):
             metadatas.append({
                 "title": item.get("title", "manuel"),
                 "url": item.get("url", "manuel"),
-                "type": item.get("type", "manuel")
+                "type": item.get("type", "manuel"),
+                "modified": item.get("modified", "")  # Ajout de la date de modification
             })
             ids.append(str(idx))
             idx += 1

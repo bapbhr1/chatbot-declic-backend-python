@@ -1,0 +1,44 @@
+[
+  {
+    "timestamp": "2025-07-15T15:48:48.972981",
+    "question": "Salut",
+    "answer": "Bonjour ! 😊 Comment puis-je vous aider aujourd'hui ? Si vous avez un projet immobilier ou des questions, n'hésitez pas à me le faire savoir. Je suis l...",
+    "user_ip": "149.202.54.114",
+    "client_id": "cbimmo"
+  },
+  {
+    "timestamp": "2025-07-15T15:50:47.481885",
+    "question": "Que proposez vous comme logements en ce moment ?",
+    "answer": "Actuellement, nous avons plusieurs logements disponibles :\n\n- Maison individuelle à Marly, 120 m², idéale pour un 1er achat.\n- Maison à Talange, 69 m²...",
+    "user_ip": "149.202.54.114",
+    "client_id": "cbimmo"
+  },
+  {
+    "timestamp": "2025-07-16T15:26:09.814454",
+    "question": "Vous êtes basés où ?",
+    "answer": "Nous sommes basés à Saint-Julien-Les-Metz, à l'adresse suivante : 30 Rue des Mélèzes, 57070 Saint-Julien-Les-Metz. Si vous avez un projet immobilier ou des questions, n'hésitez pas à nous contacter ! 😊",
+    "user_ip": "149.202.54.114",
+    "client_id": "cbimmo"
+  },
+  {
+    "timestamp": "2025-07-16T15:26:43.881509",
+    "question": "Ou se trouve l’agence ?",
+    "answer": "L'agence se situe à l'adresse suivante : 30 Rue des Mélèzes, 57070 Saint-Julien-Les-Metz. N'hésitez pas à me contacter si vous avez besoin de plus d'informations ou si vous souhaitez discuter de votre projet immobilier ! 😊",
+    "user_ip": "149.202.54.114",
+    "client_id": "cbimmo"
+  },
+  {
+    "timestamp": "2025-07-16T15:28:00.944236",
+    "question": "Comment vous rencontrer directement dans votre agence ?",
+    "answer": "Pour me rencontrer directement, vous pouvez me contacter par téléphone au +33 (0)6 61 84 00 30 ou via le formulaire de contact sur notre site à l'adresse suivante : https://cb-immobilier.fr/contact/. Je serai ravi de planifier un rendez-vous avec vou...",
+    "user_ip": "149.202.54.114",
+    "client_id": "cbimmo"
+  },
+  {
+    "timestamp": "2025-07-16T15:28:14.277521",
+    "question": "Quels biens proposez vous actuellement ?",
+    "answer": "Bonjour ! Actuellement, nous proposons plusieurs biens intéressants :\n\n- Maison à Marly, 120 m²\n- Maison à Talange, 69 m²\n- Appartement à Metz, 101 m²\n- Maison à Woippy, 143 m²\n- Appartement exceptionnel à Metz, 83 m²\n- Maison à Mexy, 100 m²\n- Maison...",
+    "user_ip": "149.202.54.114",
+    "client_id": "cbimmo"
+  }
+]

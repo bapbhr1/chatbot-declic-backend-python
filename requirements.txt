@@ -1,9 +1,8 @@
-requests
-python-dotenv
-beautifulsoup4
 openai
 chromadb
 tqdm
-pydantic-settings
+python-dotenv
+requests
+beautifulsoup4
 flask
 flask_cors

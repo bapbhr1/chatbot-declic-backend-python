@@ -1,0 +1,114 @@
+[
+  {
+    "timestamp": "2025-07-15T15:33:27.709068",
+    "question": "salut",
+    "answer": "Bonjour ! 😊 Comment puis-je vous aider aujourd'hui ? Si vous avez des questions sur nos services ou besoin d'informations, n'hésitez pas à demander !",
+    "user_ip": "54.37.121.239",
+    "client_id": "energis"
+  },
+  {
+    "timestamp": "2025-07-15T15:39:01.205624",
+    "question": "quels sont les horraires d\\'ouverture pour payer ma facture ?",
+    "answer": "Pour payer votre facture, les horaires de la caisse sont les suivants :\n\n- Du lundi au jeudi : 8h00 – 11h55 / 13h05 – 16h30\n- Vendredi : 8h00 à 12h00\n...",
+    "user_ip": "54.37.121.239",
+    "client_id": "energis"
+  },
+  {
+    "timestamp": "2025-07-15T15:39:31.210570",
+    "question": "Quels sont vos horaires d\\'accueil ?",
+    "answer": "Bonjour ! 😊 Nos horaires d'accueil sont les suivants : \n\n- Du lundi au jeudi : 8h00 – 11h55 / 13h05 – 16h55\n- Vendredi : 8h00 à 12h00\n\nN'hésitez pas s...",
+    "user_ip": "54.37.121.239",
+    "client_id": "energis"
+  },
+  {
+    "timestamp": "2025-07-15T15:39:43.523257",
+    "question": "Faites vous du photovoltaique ?",
+    "answer": "Oui, chez Energis, nous proposons des solutions photovoltaïques pour particuliers et professionnels. Nous vous accompagnons dans la production et la c...",
+    "user_ip": "54.37.121.239",
+    "client_id": "energis"
+  },
+  {
+    "timestamp": "2025-07-15T15:39:58.415778",
+    "question": "Comment faire une demande de raccordement ?",
+    "answer": "Pour faire une demande de raccordement aux réseaux d’électricité et de gaz naturel, vous pouvez utiliser notre formulaire en ligne. Avant de commencer...",
+    "user_ip": "54.37.121.239",
+    "client_id": "energis"
+  },
+  {
+    "timestamp": "2025-07-15T15:40:46.892567",
+    "question": "Je veux faire une demande de raccordement photovoltaique",
+    "answer": "Bonjour ! 😊 Pour faire une demande de raccordement photovoltaïque, vous devez remplir un formulaire en ligne. Avant de commencer, assurez-vous d'avoir...",
+    "user_ip": "54.37.121.239",
+    "client_id": "energis"
+  },
+  {
+    "timestamp": "2025-07-15T15:46:59.029263",
+    "question": "Bonjour",
+    "answer": "Bonjour ! 😊 Comment puis-je vous aider aujourd'hui ? Si vous avez des questions sur nos services, nos horaires ou autre, n'hésitez pas à me le faire s...",
+    "user_ip": "54.37.121.239",
+    "client_id": "energis"
+  },
+  {
+    "timestamp": "2025-07-15T16:21:57.827648",
+    "question": "Bonjour, comment vous contacter ?",
+    "answer": "Bonjour ! 😊 Vous pouvez nous contacter par téléphone au +33 (0) 3 87 91 25 03 pendant nos heures d'ouverture. Si vous préférez, vous pouvez également ...",
+    "user_ip": "54.37.121.239",
+    "client_id": "energis"
+  },
+  {
+    "timestamp": "2025-07-15T18:37:33.123077",
+    "question": "Comment vous retrouver ?",
+    "answer": "Pour nous retrouver, vous pouvez nous contacter par téléphone au +33 (0) 3 87 91 25 03 aux horaires d’ouverture. Voici nos horaires :\n\n**Accueil** : \n- Lundi au jeudi : 8h00 – 11h55 / 13h05 – 16h55 \n- Vendredi : 8h00 à 12h00\n\n**Caisse** : \n- Lundi au...",
+    "user_ip": "54.37.121.239",
+    "client_id": "energis"
+  },
+  {
+    "timestamp": "2025-07-15T18:37:49.505602",
+    "question": "Faites vous du gaz ?",
+    "answer": "Oui, chez Energis, nous proposons des offres pour le gaz naturel, qui est la principale source d’énergie pour le chauffage en France. Nous offrons également des services comme le diagnostic sécurité gaz pour garantir la sécurité de vos installations ...",
+    "user_ip": "54.37.121.239",
+    "client_id": "energis"
+  },
+  {
+    "timestamp": "2025-07-16T11:34:23.012350",
+    "question": "test",
+    "answer": "Bonjour ! 😊 Je suis là pour vous aider. Si vous avez une question spécifique ou un sujet en tête, n'hésitez pas à me le faire savoir. Je ferai de mon mieux pour vous fournir les informations dont vous avez besoin.",
+    "user_ip": "185.31.40.15",
+    "client_id": "energis"
+  },
+  {
+    "timestamp": "2025-07-17T09:13:45.996316",
+    "question": "Avez vous participé récemment au nettoyage de la statue de la vierge marie ?",
+    "answer": "Oui, Energis a récemment participé au nettoyage de la statue de la Vierge Marie, située rue Poincaré, le mardi 14 août. C'est une belle initiative pour contribuer à l'entretien de notre patrimoine local. Si vous souhaitez en savoir plus sur nos actio...",
+    "user_ip": "54.37.121.239",
+    "client_id": "energis"
+  },
+  {
+    "timestamp": "2025-07-17T09:14:17.372666",
+    "question": "Quelles sont les actus récentes ?",
+    "answer": "Bonjour ! 😊 Voici quelques-unes de nos actualités récentes :\n\n1. Construction d’un réseau de chaleur au quartier Carrière/Wenheck à Saint-Avold.\n2. Installation photovoltaïque sur les Ateliers Municipaux de Saint-Avold.\n3. Fourniture de 100 luminaire...",
+    "user_ip": "54.37.121.239",
+    "client_id": "energis"
+  },
+  {
+    "timestamp": "2025-07-17T07:59:54.803604",
+    "question": "f",
+    "answer": "Bonjour ! Je n'ai pas compris votre question. Pourriez-vous préciser ce que vous souhaitez savoir sur nos services ou informations ? Je suis là pour vous aider ! 😊",
+    "user_ip": "54.37.121.239",
+    "client_id": "energis"
+  },
+  {
+    "timestamp": "2025-07-17T08:00:25.078361",
+    "question": "Bonjour, que proposez-vous comme services ?",
+    "answer": "Bonjour ! 😊 Energis propose une gamme de services adaptés aux professionnels, incluant la fourniture de gaz et d'électricité, ainsi que des contrats personnalisés basés sur vos besoins. Nous offrons également des solutions pour l'installation de born...",
+    "user_ip": "172.18.0.1",
+    "client_id": "energis"
+  },
+  {
+    "timestamp": "2025-07-17T11:02:41.119987",
+    "question": "De quand date le changement d\\'identité pour Energis ?",
+    "answer": "Le changement d'identité pour Energis a été annoncé le 26 juin 2025. Ce changement reflète notre volonté d'évoluer et d'accompagner les transformations environnementales et sociétales. Si vous souhaitez en savoir plus sur nos initiatives, n'hésitez p...",
+    "user_ip": "54.37.121.239",
+    "client_id": "energis"
+  }
+]
