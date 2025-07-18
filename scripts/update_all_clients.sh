@@ -8,9 +8,13 @@ export CHATBOT_CLIENTS_PATH="/app/data/clients"
 
 CLIENTS_DIR="/app/data/clients"
 SCRIPTS_DIR="/app/scripts"
-LOG_FILE="/app/logs/auto_update.log"
+LOGS_DIR="/app/logs"
 
+# Rotation des logs : un fichier par jour avec suppression auto après 30 jours
+LOG_FILE="$LOGS_DIR/auto_update_$(date +%Y%m%d).log"
 
+# Supprimer les logs de plus de 30 jours
+find "$LOGS_DIR" -name "auto_update_*.log" -mtime +30 -delete 2>/dev/null || true
 
 echo "=== Début mise à jour automatique $(date) ===" | tee -a "$LOG_FILE"
 

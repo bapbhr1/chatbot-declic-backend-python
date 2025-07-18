@@ -6,10 +6,7 @@ from bs4 import BeautifulSoup
 from pathlib import Path
 import re
 
-# === IMPORTANT ===
-# Ce script doit être exécuté sur le serveur, jamais en local.
-# Le chemin des clients est défini par la variable d'environnement CHATBOT_CLIENTS_PATH
-# ou par défaut '/root/chatbot-wp-declic/data/clients/'
+# Chemin des clients, défini par la variable d'environnement CHATBOT_CLIENTS_PATH
 CLIENTS_PATH = Path(os.environ.get("CHATBOT_CLIENTS_PATH", "/root/chatbot-wp-declic/data/clients/"))
 
 def load_client_config(client_id):

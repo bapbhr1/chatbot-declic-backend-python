@@ -20,10 +20,7 @@ AI_CONFIG = {
     "collection_name": "wordpress_content"
 }
 
-# === IMPORTANT ===
-# Ce script doit être exécuté sur le serveur, jamais en local.
-# Le chemin des clients est défini par la variable d'environnement CHATBOT_CLIENTS_PATH
-# ou par défaut '/root/chatbot-wp-declic/data/clients/'
+# Chemin des clients, défini par la variable d'environnement CHATBOT_CLIENTS_PATH
 CLIENTS_PATH = Path(os.environ.get("CHATBOT_CLIENTS_PATH", "/root/chatbot-wp-declic/data/clients/"))
 
 def load_client_config(client_id):
@@ -105,23 +102,3 @@ def chatbot_response(user_question, client_id="default"):
 
 
 
-# TEST CHATBOT PAR CLIENT
-
-if __name__ == "__main__":
-    print("=== Test Chatbot Declic ===")
-    while True:
-        client_id = input("ID client (ex: 'default', 'mon_client') ou 'q' pour quitter: ").strip()
-        if client_id.lower() == 'q':
-            break
-        question = input("Pose ta question : ").strip()
-        if not question:
-            print("Question vide, essaie encore.")
-            continue
-        print("En cours de traitement...\n")
-        try:
-            answer = chatbot_response(question, client_id)
-            print("Réponse du chatbot :\n")
-            print(answer)
-            print("\n" + "="*50 + "\n")
-        except Exception as e:
-            print(f"Erreur lors de la requête : {e}\n")

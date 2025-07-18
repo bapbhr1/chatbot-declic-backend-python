@@ -8,10 +8,7 @@ from datetime import datetime, timedelta
 from collections import Counter, defaultdict
 import re
 
-# === IMPORTANT ===
-# Ce script doit être exécuté sur le serveur, jamais en local.
-# Le chemin des clients est défini par la variable d'environnement CHATBOT_CLIENTS_PATH
-# ou par défaut '/root/chatbot-wp-declic/data/clients/'
+# Chemin des clients, défini par la variable d'environnement CHATBOT_CLIENTS_PATH
 CLIENTS_PATH = Path(os.environ.get("CHATBOT_CLIENTS_PATH", "/root/chatbot-wp-declic/data/clients/"))
 
 app = Flask(__name__)
@@ -591,6 +588,236 @@ def questions_frequent():
         "keywords": keywords,
         "frequent_questions": question_groups
     })
+
+@app.route("/clients/<client_id>/update_logs", methods=["GET"])
+@require_api_key
+def get_update_logs(client_id):
+    """
+    Récupère les logs de mise à jour automatique pour un client spécifique
+    Paramètres optionnels:
+    - date: YYYY-MM-DD (par défaut: aujourd'hui)
+    - lines: nombre de lignes à retourner (par défaut: 100)
+    - search: rechercher un texte spécifique dans les logs
+    """
+    try:
+        # Paramètres de la requête
+        date_param = request.args.get("date", datetime.now().strftime("%Y%m%d"))
+        lines_limit = int(request.args.get("lines", 100))
+        search_term = request.args.get("search", "").strip().lower()
+        
+        # Construire le chemin du fichier de log
+        logs_dir = Path("/app/logs")
+        log_file = logs_dir / f"auto_update_{date_param}.log"
+        
+        if not log_file.exists():
+            return jsonify({
+                "client_id": client_id,
+                "date": date_param,
+                "logs": [],
+                "message": f"Aucun log trouvé pour la date {date_param}"
+            })
+        
+        # Lire le fichier de log
+        with open(log_file, "r", encoding="utf-8") as f:
+            all_lines = f.readlines()
+        
+        # Filtrer les logs pour ce client spécifique - RÉCUPÉRER TOUT
+        client_logs = []
+        in_client_section = False
+        client_pattern = f"Mise à jour du client: {client_id}"
+        next_client_pattern = "Mise à jour du client:"
+        
+        for i, line in enumerate(all_lines):
+            original_line = line  # Garder la ligne originale avec ses espaces/indentations
+            line_stripped = line.strip()
+            
+            # Début de la section pour notre client
+            if client_pattern in line_stripped:
+                in_client_section = True
+                client_logs.append(original_line.rstrip())
+                continue
+            
+            # Fin de la section - plus précis pour capturer TOUT jusqu'au prochain client
+            if in_client_section:
+                # Arrêter si on trouve un autre client OU le résumé final
+                if (next_client_pattern in line_stripped and client_pattern not in line_stripped) or \
+                   line_stripped.startswith("=== Résumé de la mise à jour"):
+                    in_client_section = False
+                    break
+                
+                # Sinon, ajouter TOUTE ligne qui fait partie de notre section
+                client_logs.append(original_line.rstrip())
+        
+        # Si on est encore dans la section client à la fin du fichier, c'était le dernier client
+        # On continue à ajouter les lignes jusqu'à la fin ou jusqu'au résumé
+        if in_client_section:
+            for j in range(i + 1, len(all_lines)):
+                line_stripped = all_lines[j].strip()
+                if line_stripped.startswith("=== Résumé de la mise à jour"):
+                    break
+                client_logs.append(all_lines[j].rstrip())
+        
+        # Appliquer le filtre de recherche si spécifié
+        if search_term:
+            client_logs = [line for line in client_logs if search_term in line.lower()]
+        
+        # Limiter le nombre de lignes
+        if lines_limit > 0:
+            client_logs = client_logs[-lines_limit:]
+        
+        # Informations supplémentaires - ANALYSE COMPLÈTE
+        success_indicators = ["✓", "succès", "terminée"]
+        error_indicators = ["✗", "erreur", "timeout", "échec"]
+        
+        has_success = any(any(indicator in line.lower() for indicator in success_indicators) for line in client_logs)
+        has_errors = any(any(indicator in line.lower() for indicator in error_indicators) for line in client_logs)
+        
+        # Extraire TOUTES les informations détaillées
+        extracted_info = {
+            "urls_fetched": [],
+            "content_summary": {},
+            "differences": {},
+            "modified_contents": [],
+            "embedding_progress": [],
+            "total_chunks": None,
+            "final_progress": None,
+            "execution_time": None,
+            "database_path": None
+        }
+        
+        for line in client_logs:
+            line_clean = line.strip()
+            
+            # URLs récupérées
+            if "🔍 Récupération de :" in line_clean:
+                url_match = re.search(r"🔍 Récupération de : (.+)", line_clean)
+                if url_match:
+                    extracted_info["urls_fetched"].append(url_match.group(1))
+            
+            # Résumé du contenu sauvegardé
+            elif "Contenu sauvegardé dans" in line_clean and "éléments" in line_clean:
+                elements_match = re.search(r"\((\d+) éléments\)", line_clean)
+                path_match = re.search(r"Contenu sauvegardé dans (.+?) \(", line_clean)
+                if elements_match:
+                    extracted_info["content_summary"]["total_elements"] = int(elements_match.group(1))
+                if path_match:
+                    extracted_info["content_summary"]["file_path"] = path_match.group(1)
+            
+            # Résumé des différences
+            elif "Ajoutés :" in line_clean:
+                added_match = re.search(r"Ajoutés : (\d+)", line_clean)
+                if added_match:
+                    extracted_info["differences"]["added"] = int(added_match.group(1))
+            elif "Supprimés :" in line_clean:
+                removed_match = re.search(r"Supprimés : (\d+)", line_clean)
+                if removed_match:
+                    extracted_info["differences"]["removed"] = int(removed_match.group(1))
+            elif "Modifiés :" in line_clean:
+                modified_match = re.search(r"Modifiés : (\d+)", line_clean)
+                if modified_match:
+                    extracted_info["differences"]["modified"] = int(modified_match.group(1))
+            
+            # Contenus modifiés spécifiques
+            elif line_clean.startswith("- ") and any(keyword in line_clean.lower() for keyword in ["page", "article", "contenu", "offre"]):
+                content_name = line_clean[2:].strip()  # Enlever "- "
+                extracted_info["modified_contents"].append(content_name)
+            
+            # Génération des embeddings
+            elif "Génération des embeddings pour" in line_clean:
+                chunks_match = re.search(r"Génération des embeddings pour (\d+) chunks", line_clean)
+                if chunks_match:
+                    extracted_info["total_chunks"] = int(chunks_match.group(1))
+            
+            # Progression des embeddings (lignes avec %)
+            elif "%" in line_clean and "|" in line_clean and "[" in line_clean:
+                progress_match = re.search(r"(\d+)%", line_clean)
+                if progress_match:
+                    progress_percent = int(progress_match.group(1))
+                    # Ne garder que certaines étapes pour éviter trop de données
+                    if progress_percent % 10 == 0 or progress_percent in [1, 5, 95, 99, 100]:
+                        extracted_info["embedding_progress"].append({
+                            "percent": progress_percent,
+                            "line": line_clean
+                        })
+                    extracted_info["final_progress"] = progress_percent
+            
+            # Chemin de la base de données
+            elif "Embeddings indexés dans" in line_clean:
+                db_match = re.search(r"Embeddings indexés dans (.+)", line_clean)
+                if db_match:
+                    extracted_info["database_path"] = db_match.group(1)
+        
+        # Calculer le temps d'exécution approximatif si on a des barres de progression
+        if extracted_info["embedding_progress"]:
+            # Prendre la dernière progression pour estimer le temps
+            last_progress = extracted_info["embedding_progress"][-1]
+            if last_progress["percent"] == 100:
+                # Extraire le temps de la barre de progression finale
+                time_match = re.search(r"\[(\d+:\d+)<", last_progress["line"])
+                if time_match:
+                    extracted_info["execution_time"] = time_match.group(1)
+        
+        return jsonify({
+            "client_id": client_id,
+            "date": date_param,
+            "total_lines": len(client_logs),
+            "has_success": has_success,
+            "has_errors": has_errors,
+            "extracted_info": extracted_info,
+            "logs": client_logs,
+            "search_term": search_term if search_term else None,
+            "summary": {
+                "urls_count": len(extracted_info["urls_fetched"]),
+                "has_content_changes": bool(extracted_info["differences"]),
+                "embedding_completed": extracted_info["final_progress"] == 100 if extracted_info["final_progress"] else False,
+                "total_chunks_processed": extracted_info["total_chunks"],
+                "execution_time": extracted_info["execution_time"]
+            }
+        })
+        
+    except Exception as e:
+        return jsonify({"error": f"Erreur lors de la lecture des logs: {str(e)}"}), 500
+
+@app.route("/clients/<client_id>/update_logs/dates", methods=["GET"])
+@require_api_key
+def get_available_log_dates(client_id):
+    """
+    Récupère la liste des dates disponibles pour les logs de mise à jour
+    """
+    try:
+        logs_dir = Path("/app/logs")
+        log_files = list(logs_dir.glob("auto_update_*.log"))
+        
+        dates = []
+        for log_file in log_files:
+            # Extraire la date du nom de fichier (auto_update_YYYYMMDD.log)
+            date_match = re.search(r"auto_update_(\d{8})\.log", log_file.name)
+            if date_match:
+                date_str = date_match.group(1)
+                # Vérifier si ce client apparaît dans ce log
+                try:
+                    with open(log_file, "r", encoding="utf-8") as f:
+                        content = f.read()
+                        if f"Mise à jour du client: {client_id}" in content:
+                            dates.append({
+                                "date": date_str,
+                                "formatted_date": f"{date_str[:4]}-{date_str[4:6]}-{date_str[6:8]}",
+                                "file_size": log_file.stat().st_size
+                            })
+                except Exception:
+                    continue
+        
+        # Trier par date décroissante (plus récent en premier)
+        dates.sort(key=lambda x: x["date"], reverse=True)
+        
+        return jsonify({
+            "client_id": client_id,
+            "available_dates": dates,
+            "total_files": len(dates)
+        })
+        
+    except Exception as e:
+        return jsonify({"error": f"Erreur lors de la recherche des dates: {str(e)}"}), 500
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True, port=5000)

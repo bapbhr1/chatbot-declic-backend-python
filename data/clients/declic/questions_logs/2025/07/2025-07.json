@@ -1,5 +1,4 @@
 [
-
   {
     "timestamp": "2025-07-15T16:00:13.672867",
     "question": "Faites vous des flyers ?",
@@ -14,7 +13,6 @@
     "user_ip": "91.134.248.211",
     "client_id": "declic"
   },
-  
   {
     "timestamp": "2025-07-15T16:40:02.648119",
     "question": "Vous occupez vous du Naborraid ?",
@@ -50,8 +48,6 @@
     "user_ip": "91.134.248.211",
     "client_id": "declic"
   },
-  
-  
   {
     "timestamp": "2025-07-16T16:13:42.799167",
     "question": "avez vous deja travaillé pour acoustic affinités",
@@ -66,8 +62,6 @@
     "user_ip": "91.134.248.211",
     "client_id": "declic"
   },
-  
-  
   {
     "timestamp": "2025-07-16T16:15:35.789180",
     "question": "quelles sont les actualités récentes ?",
@@ -201,8 +195,6 @@
     "user_ip": "91.134.248.211",
     "client_id": "declic"
   },
-  
-  
   {
     "timestamp": "2025-07-17T11:44:50.366816",
     "question": "de quand date leur nouvel album : moi j\\'en veux plus",
@@ -217,7 +209,6 @@
     "user_ip": "91.134.248.211",
     "client_id": "declic"
   },
-  
   {
     "timestamp": "2025-07-17T11:50:41.430721",
     "question": "est ce que vous avez été en rapport avec acoustic affinités",
@@ -225,7 +216,6 @@
     "user_ip": "91.134.248.211",
     "client_id": "declic"
   },
-  
   {
     "timestamp": "2025-07-17T11:53:59.588653",
     "question": "avec quels entreprises avez vous le plus collaboré",
@@ -240,8 +230,6 @@
     "user_ip": "91.134.248.211",
     "client_id": "declic"
   },
-  
-  
   {
     "timestamp": "2025-07-17T11:57:22.497405",
     "question": "Le seo de vos sites est fiable ? C’est compliqué d’être visible sur le web",
@@ -269,7 +257,33 @@
     "answer": "Oui, nous avons eu le plaisir de travailler avec la société LOTZ. Nous les avons accompagnés dans la dynamisation de leur image à travers une campagne publicitaire qui a marqué un tournant visuel fort pour leur communication. Notre équipe a géré l'en...",
     "user_ip": "91.134.248.211",
     "client_id": "declic"
+  },
+  {
+    "timestamp": "2025-07-17T16:30:22.452680",
+    "question": "Vous faites des sites web personnalisés ?",
+    "answer": "Oui, nous créons des sites web entièrement personnalisés ! Notre équipe d'experts en communication et en développement vous accompagne pour concevoir un site qui répond à vos besoins spécifiques, que ce soit un site vitrine, e-commerce ou un système d'inscription en ligne. Nous nous engageons à vous fournir une solution digitale à votre image. N'hésitez pas à nous contacter pour en discuter davantage ! 😊",
+    "user_ip": "91.134.248.211",
+    "client_id": "declic"
+  },
+  {
+    "timestamp": "2025-07-17T16:46:51.425031",
+    "question": "Vous situez vous à Saint Avold ?",
+    "answer": "Oui, notre agence Déclic Communication est située au 2 avenue des Alliés, 57500 à Saint-Avold. Si vous avez d'autres questions ou besoin d'informations sur nos services, n'hésitez pas à demander ! 😊",
+    "user_ip": "91.134.248.211",
+    "client_id": "declic"
+  },
+  {
+    "timestamp": "2025-07-18T08:54:27.322513",
+    "question": "Je peux faire un devis en ligne ?",
+    "answer": "Bonjour ! 😊 Oui, vous pouvez faire une demande de devis en ligne pour des quantités spéciales. Si vous avez besoin d'informations supplémentaires ou d'aide pour votre demande, n'hésitez pas à nous le faire savoir !",
+    "user_ip": "91.134.248.211",
+    "client_id": "declic"
+  },
+  {
+    "timestamp": "2025-07-18T09:53:17.719581",
+    "question": "Qui dirige l\\'entreprise ?",
+    "answer": "L'entreprise est dirigée par Sébastien Albert, qui a repris les rênes de Déclic Communication en décembre 2022 après plus de 25 ans au sein de la société. Il est également Conseiller en Communication, spécialisé dans la communication digitale. Si tu souhaites en savoir plus sur nos services ou notre équipe, n'hésite pas à demander ! 😊",
+    "user_ip": "91.134.248.211",
+    "client_id": "declic"
   }
-  
-  
 ]
